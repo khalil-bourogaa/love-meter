@@ -26,8 +26,8 @@ h2.title{font-size:clamp(2rem,8vw,3rem);font-weight:800;color:var(--rose);font-f
 input[type=range]{-webkit-appearance:none;appearance:none;width:min(400px,86vw);height:8px;border-radius:99px;background:linear-gradient(90deg,var(--rose) var(--p,0%),#f4c3d0 var(--p,0%));margin-top:10px;touch-action:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:4px solid var(--rose);box-shadow:0 3px 10px #e8456f55}
 input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--rose)}
-button.cta,button.next{border:0;border-radius:99px;font:800 1rem 'Nunito',sans-serif;color:#fff;background:linear-gradient(135deg,#f06b8f,var(--deep));cursor:pointer;box-shadow:0 8px 20px #a3123e44}
-button.cta{padding:14px 28px;margin-top:18px}
+button.cta,a.cta,button.next{border:0;border-radius:99px;font:800 1rem 'Nunito',sans-serif;color:#fff;background:linear-gradient(135deg,#f06b8f,var(--deep));cursor:pointer;box-shadow:0 8px 20px #a3123e44}
+button.cta,a.cta{padding:14px 28px;margin-top:18px;border:0;border-radius:99px;font:800 1rem 'Nunito',sans-serif;color:#fff}
 button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9rem;z-index:5}
 [hidden]{display:none!important}
 .deco{position:absolute;opacity:.55;animation:bob 4s ease-in-out infinite;pointer-events:none}
@@ -73,6 +73,18 @@ button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9r
 .buddy{width:130px;align-self:flex-start;margin-left:max(0px,calc(50% - 310px))}
 .float{position:fixed;pointer-events:none;animation:up linear forwards;z-index:60}
 @keyframes up{from{transform:translateY(0) scale(.6);opacity:1}to{transform:translateY(-110vh) scale(1.3);opacity:0}}
+
+/* photobooth */
+.booth{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-top:12px}
+.viewfinder{position:relative;width:min(420px,90vw);aspect-ratio:4/3;background:#3a1020;border:6px solid #fff;border-radius:18px;overflow:hidden;box-shadow:0 12px 28px #a3123e44}
+.viewfinder video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.viewfinder .count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6rem;font-weight:800;color:#fff;text-shadow:0 4px 16px #a3123e}
+.viewfinder .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.viewfinder .flash.go{animation:fl .4s ease}
+@keyframes fl{from{opacity:.95}to{opacity:0}}
+.strip img{width:min(160px,40vw);box-shadow:0 12px 26px #a3123e44;transform:rotate(2deg);display:block}
+.brow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+a.cta{text-decoration:none;display:inline-block}
 </style>
 </head>
 <body>
@@ -123,7 +135,7 @@ button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9r
 
 <!-- 4: MEMORIES -->
 <section class="screen pinkbg" id="s4">
-  <button class="next" data-go="s5">Next →</button>
+  <button class="next" data-go="s6">Next →</button>
   <div class="scrap">
     <div class="ticket">LOVE PASS<br>ADMIT ONE · FOREVER<br>♥ SPECIAL DAY ♥</div>
     <div class="polaroid"><div class="tape"></div><div class="img" id="photoBox">📸</div><div class="cap" id="caption"></div></div>
@@ -134,6 +146,23 @@ button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9r
       <button id="play">▶</button>
     </div>
     <audio id="audio" preload="none"></audio>
+  </div>
+</section>
+
+<!-- 4b: PHOTOBOOTH -->
+<section class="screen pinkbg" id="s6">
+  <button class="next" data-go="s5">Next →</button>
+  <h2 class="title" style="font-size:2.2rem">Love Photobooth</h2>
+  <p class="sub" id="boothMsg">Strike a pose together! 4 photos, 3 seconds apart 📸</p>
+  <div class="booth">
+    <div class="viewfinder" id="vf"><video id="cam" playsinline muted></video><div class="count" id="count"></div><div class="flash" id="flash"></div></div>
+    <div class="strip" id="stripWrap" hidden><img id="stripImg" alt="Your photo strip"></div>
+  </div>
+  <div class="brow">
+    <button class="cta" id="startCam">Start camera 📷</button>
+    <button class="cta" id="snap" hidden>Take photos 💗</button>
+    <a class="cta" id="dl" hidden download="love-photobooth.png">Download ⬇</a>
+    <button class="cta" id="retake" hidden>Retake 🔁</button>
   </div>
 </section>
 
@@ -194,7 +223,7 @@ Thank you for being you and for filling my heart with so much love. No matter wh
 
 const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
 const meter=$('meter');
-function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
+let go=function(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 
 /* hearts burst */
@@ -261,6 +290,42 @@ $('letterTitle').textContent=CONFIG.letterTitle;$('letterText').textContent=CONF
 
 $('open').onclick=()=>{go('s2');burst(30)};
 $('again').onclick=()=>{audio.pause();meter.value=0;done=false;$('open').hidden=true;$('hint').hidden=false;update();go('s1')};
+/* photobooth */
+let stream=null;
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('cam').srcObject=null}
+const _go=go; go=function(id){if(id!=='s6')stopCam();_go(id)};
+$('startCam').onclick=async()=>{
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false});
+    $('cam').srcObject=stream;await $('cam').play();
+    $('startCam').hidden=true;$('snap').hidden=false;
+  }catch(e){$('boothMsg').textContent='Camera not available. Allow camera access in your browser (needs https or localhost).'}
+};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+$('snap').onclick=async()=>{
+  $('snap').hidden=true;$('stripWrap').hidden=true;$('dl').hidden=true;
+  const v=$('cam'),shots=[];
+  for(let i=0;i<4;i++){
+    for(let c=3;c>0;c--){$('count').textContent=c;await wait(1000)}
+    $('count').textContent='';
+    const cv=document.createElement('canvas');cv.width=480;cv.height=360;const x=cv.getContext('2d');
+    const vw=v.videoWidth||640,vh=v.videoHeight||480,r=Math.max(480/vw,360/vh),w=vw*r,h=vh*r;
+    x.translate(480,0);x.scale(-1,1);x.drawImage(v,(480-w)/2,(360-h)/2,w,h);
+    shots.push(cv);$('flash').classList.remove('go');void $('flash').offsetWidth;$('flash').classList.add('go');
+    $('boothMsg').textContent='Photo '+(i+1)+' of 4 ✨';await wait(700);
+  }
+  const W=540,P=30,H=shots.length*(360+P)+P+110,out=document.createElement('canvas');out.width=W;out.height=H;const o=out.getContext('2d');
+  const g=o.createLinearGradient(0,0,0,H);g.addColorStop(0,'#ffd1de');g.addColorStop(1,'#ff9bb5');o.fillStyle=g;o.fillRect(0,0,W,H);
+  shots.forEach((cv,i)=>{const y=P+i*(360+P);o.fillStyle='#fff';o.fillRect(30-6,y-6,480+12,360+12);o.drawImage(cv,30,y)});
+  o.fillStyle='#a3123e';o.textAlign='center';o.font='700 44px "Dancing Script",cursive';o.fillText('Love Photobooth ♥',W/2,H-52);
+  o.font='700 20px Nunito,sans-serif';o.fillText(new Date().toLocaleDateString(),W/2,H-22);
+  const url=out.toDataURL('image/png');$('stripImg').src=url;$('dl').href=url;
+  $('stripWrap').hidden=false;$('dl').hidden=false;$('retake').hidden=false;
+  $('boothMsg').textContent='So cute! Download your strip 💞';burst(20);
+};
+$('retake').onclick=()=>{$('retake').hidden=true;$('dl').hidden=true;$('stripWrap').hidden=true;$('boothMsg').textContent='Strike a pose together! 4 photos, 3 seconds apart 📸';$('snap').hidden=false};
+$('again').addEventListener('click',()=>{stopCam()});
+
 setMood('shy');update();
 </script>
 </body>
