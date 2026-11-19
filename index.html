@@ -85,22 +85,33 @@ button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9r
 .strip img{width:min(160px,40vw);box-shadow:0 12px 26px #a3123e44;transform:rotate(2deg);display:block}
 .brow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 a.cta{text-decoration:none;display:inline-block}
+
+.cat{width:140px;height:140px;overflow:visible}
+.cat.wiggle{animation:wig .5s ease infinite}
+.ynrow{display:flex;gap:26px;margin-top:22px;align-items:center;justify-content:center;min-height:120px;position:relative;width:min(420px,92vw)}
+.ynrow button{border:0;border-radius:18px;font:800 1.4rem 'Nunito',sans-serif;color:#fff;cursor:pointer;padding:16px 34px;box-shadow:0 6px 0 #0002;transition:transform .2s,padding .2s,font-size .2s}
+#yes{background:#7fceA0;background:#76cc9f}
+#no{background:#e0505f;position:relative}
+.gift{text-align:center}.gift small{display:block;font-weight:800;color:var(--deep);font-size:.8rem;margin-top:4px}
+.gift.opened{opacity:.55;filter:saturate(.6)}
 </style>
 </head>
 <body>
 
+<!-- 0: YES / NO -->
+<section class="screen active" id="s0">
+  <svg class="deco" style="top:12px;right:12px;width:60px" viewBox="0 0 60 60" fill="none" stroke="#e8456f" stroke-width="2.5" stroke-dasharray="5 4"><path d="M30 50C6 32 12 12 30 24 48 12 54 32 30 50z"/></svg>
+  <svg id="cat0" class="cat" viewBox="0 0 150 150" aria-hidden="true"></svg>
+  <h1 id="ynQ">Do you love me? ❤</h1>
+  <div class="ynrow" id="ynrow"><button id="yes">YES</button><button id="no">NO</button></div>
+</section>
+
 <!-- 1: LOVE METER -->
-<section class="screen active" id="s1">
+<section class="screen" id="s1">
   <svg class="plane" viewBox="0 0 90 60"><path d="M4 30L84 4 62 56 44 38z" fill="#ffc1d1" stroke="#e8456f" stroke-width="2.5" stroke-linejoin="round"/><path d="M44 38l40-34" stroke="#e8456f" stroke-width="2.5"/><circle cx="52" cy="26" r="2" fill="#6b1030"/><circle cx="62" cy="23" r="2" fill="#6b1030"/></svg>
   <svg class="deco" style="top:10px;right:10px;width:60px" viewBox="0 0 60 60" fill="none" stroke="#e8456f" stroke-width="2.5" stroke-dasharray="5 4"><path d="M30 50C6 32 12 12 30 24 48 12 54 32 30 50z"/></svg>
 
-  <svg id="face" viewBox="0 0 150 150" aria-hidden="true">
-    <ellipse cx="75" cy="84" rx="52" ry="46" fill="#fff" stroke="#6b1030" stroke-width="3"/>
-    <path d="M30 56L36 18 66 40zM120 56L114 18 84 40z" fill="#fff" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M38 44l2-12 12 8zM112 44l-2-12-12 8z" fill="#ffc2d1"/>
-    <ellipse cx="44" cy="94" rx="9" ry="5" fill="#ff9bb5" opacity=".7"/><ellipse cx="106" cy="94" rx="9" ry="5" fill="#ff9bb5" opacity=".7"/>
-    <g id="eyes"></g><g id="mouth"></g>
-  </svg>
+  <svg id="face" class="cat" viewBox="0 0 150 150" aria-hidden="true"></svg>
   <h1 id="question">How much do you love me?</h1>
   <div id="pct">0%</div>
   <div class="gauge"><svg viewBox="0 0 400 210">
@@ -135,7 +146,7 @@ a.cta{text-decoration:none;display:inline-block}
 
 <!-- 4: MEMORIES -->
 <section class="screen pinkbg" id="s4">
-  <button class="next" data-go="s6">Next →</button>
+  <button class="next" data-go="s2">Back to gifts ⟵</button><button class="next" style="display:none" data-go="s2">Next →</button>
   <div class="scrap">
     <div class="ticket">LOVE PASS<br>ADMIT ONE · FOREVER<br>♥ SPECIAL DAY ♥</div>
     <div class="polaroid"><div class="tape"></div><div class="img" id="photoBox">📸</div><div class="cap" id="caption"></div></div>
@@ -151,7 +162,7 @@ a.cta{text-decoration:none;display:inline-block}
 
 <!-- 4b: PHOTOBOOTH -->
 <section class="screen pinkbg" id="s6">
-  <button class="next" data-go="s5">Next →</button>
+  <button class="next" data-go="s2">Back to gifts ⟵</button>
   <h2 class="title" style="font-size:2.2rem">Love Photobooth</h2>
   <p class="sub" id="boothMsg">Strike a pose together! 4 photos, 3 seconds apart 📸</p>
   <div class="booth">
@@ -178,7 +189,7 @@ a.cta{text-decoration:none;display:inline-block}
     <path d="M70 70c-18-12-12-28 2-22 10-6 24 6 18 16-4 8-14 14-20 6z" fill="#e8456f" stroke="#a3123e" stroke-width="3" transform="translate(-8 14)"/>
     <ellipse cx="34" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/><ellipse cx="68" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/>
   </svg>
-  <button class="cta" id="again">Play again 💞</button>
+  <div class="brow"><button class="cta" data-go="s2">Back to gifts 🎁</button><button class="cta" id="again">Play again 💞</button></div>
 </section>
 
 <script>
@@ -235,15 +246,44 @@ cols.forEach((c,i)=>{const a0=Math.PI+i*Math.PI/5,a1=Math.PI+(i+1)*Math.PI/5,p=(
 const [x0,y0]=p(R,a0),[x1,y1]=p(R,a1),[x2,y2]=p(r,a1),[x3,y3]=p(r,a0);
 const el=document.createElementNS(NS,'path');el.setAttribute('d',`M${x0} ${y0}A${R} ${R} 0 0 1 ${x1} ${y1}L${x2} ${y2}A${r} ${r} 0 0 0 ${x3} ${y3}Z`);el.setAttribute('fill',c);el.setAttribute('stroke','#fff3f6');el.setAttribute('stroke-width','3');g.appendChild(el)})})();
 
-/* faces */
-const L='stroke="#6b1030" stroke-width="4" fill="none" stroke-linecap="round"';
-const faces={
- shy:{e:`<circle cx="58" cy="82" r="5" fill="#6b1030"/><circle cx="92" cy="82" r="5" fill="#6b1030"/>`,m:`<path d="M66 106h18" ${L}/>`},
- sad:{e:`<path d="M50 84q8-8 16 0M84 84q8-8 16 0" ${L}/><path d="M52 90v26M98 90v26" stroke="#5aa9e6" stroke-width="9" stroke-linecap="round"/>`,m:`<path d="M64 112q11-12 22 0" ${L}/>`},
- smirk:{e:`<circle cx="58" cy="82" r="5" fill="#6b1030"/><circle cx="92" cy="82" r="5" fill="#6b1030"/><path d="M50 72l16 4M100 72l-16 4" ${L}/>`,m:`<path d="M62 106q16 8 26-4" ${L}/>`},
- smile:{e:`<path d="M50 84q8-10 16 0M84 84q8-10 16 0" ${L}/>`,m:`<path d="M60 100q15 18 30 0z" fill="#ff9bb5" ${L.replace('fill="none"','')}/>`},
- love:{e:`<path d="M58 90c-14-9-10-20-2-20 3 0 2 3 2 3s-1-3 2-3c8 0 12 11-2 20zM92 90c-14-9-10-20-2-20 3 0 2 3 2 3s-1-3 2-3c8 0 12 11-2 20z" fill="#e8456f"/>`,m:`<path d="M58 100q17 24 34 0z" fill="#a3123e" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>`}};
-let mood='';function setMood(m){if(m===mood)return;mood=m;$('eyes').innerHTML=faces[m].e;$('mouth').innerHTML=faces[m].m;$('face').classList.toggle('wiggle',m==='love')}
+/* cat (white, peach patches, blush) */
+const INK='#3b2a30',LN=`stroke="${INK}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"`;
+const catHead=`
+ <path d="M26 66L28 24Q30 16 38 20L70 44Z" fill="#fff" ${LN}/><path d="M124 66L122 24Q120 16 112 20L80 44Z" fill="#fff" ${LN}/>
+ <path d="M35 44L36 30 52 40Z" fill="#f8d3c2"/>
+ <path d="M75 126c-36 0-52-18-52-42S40 40 75 40s52 20 52 44-16 42-52 42z" fill="#fff" ${LN}/>
+ <path d="M32 62Q44 46 68 46Q56 58 40 74Q32 74 32 62z" fill="#f8d3c2" opacity=".9"/>
+ <path d="M22 84l-12-3M22 92l-12 3M128 84l12-3M128 92l12 3" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+ <path d="M38 92l6-8M45 94l6-8M52 95l5-7M112 92l-6-8M105 94l-6-8M98 95l-5-7" stroke="#f0707f" stroke-width="3" stroke-linecap="round" opacity=".85"/>`;
+const eye=(x)=>`<ellipse cx="${x}" cy="84" rx="6" ry="7.5" fill="${INK}"/><circle cx="${x+2}" cy="81" r="2.4" fill="#fff"/>`;
+const arcEye=(x)=>`<path d="M${x-7} 86q7-11 14 0" fill="none" ${LN}/>`;
+const heartP=(x,y,k=1)=>`<path d="M${x} ${y+10*k}c-${14*k}-${9*k}-${10*k}-${20*k}-${2*k}-${20*k} ${3*k} 0 ${2*k} ${3*k} ${2*k} ${3*k}s-${1*k}-${3*k} ${2*k}-${3*k}c${8*k} 0 ${12*k} ${11*k}-${2*k} ${20*k}z" fill="#e8456f" stroke="#a3123e" stroke-width="2" stroke-linejoin="round"/>`;
+const paw=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="14" ry="17" fill="#fff" ${LN}/><path d="M${x-5} ${y-4}v10M${x} ${y-5}v12M${x+5} ${y-4}v10" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+const moods={
+ cheer:  eye(58)+eye(92)+`<path d="M66 96Q75 112 84 96Z" fill="#ff8fa3" ${LN}/><path d="M30 118l-14-14M120 118l14-14" ${LN}/>`,
+ shy:    eye(58)+eye(92)+`<path d="M69 98q6 5 12 0" fill="none" ${LN}/>`,
+ sad:    eye(58)+eye(92)+`<path d="M52 92v28M98 92v28" stroke="#5aa9e6" stroke-width="10" stroke-linecap="round" opacity=".9"/><path d="M64 106q11-11 22 0" fill="none" ${LN}/>`,
+ smirk:  `<path d="M48 82h20M82 82h20" ${LN}/><path d="M48 72l18 4M102 72l-18 4" ${LN}/><path d="M62 100q14 8 26-4" fill="none" ${LN}/>`,
+ smile:  arcEye(58)+arcEye(92)+`<path d="M62 98Q75 116 88 98Z" fill="#ff8fa3" ${LN}/>`,
+ love:   `<path d="M58 92c-12-8-9-18-2-18 3 0 2 3 2 3s-1-3 2-3c7 0 10 10-2 18zM92 92c-12-8-9-18-2-18 3 0 2 3 2 3s-1-3 2-3c7 0 10 10-2 18z" fill="#e8456f"/><path d="M62 98Q75 118 88 98Z" fill="#ff8fa3" ${LN}/>`+heartP(112,34,1.1),
+ cover:  paw(56,86)+paw(94,86)+`<path d="M122 52q4-6 8 0M136 62q4-6 8 0" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`,
+ peek:   `<ellipse cx="58" cy="84" rx="6" ry="7.5" fill="${INK}"/><circle cx="60" cy="81" r="2.4" fill="#fff"/>`+paw(94,88)+`<path d="M66 104q8 6 14 0" fill="none" ${LN}/>`
+};
+function drawCat(el,m){el.innerHTML=catHead+(moods[m]||moods.shy);el.classList.toggle('wiggle',m==='love'||m==='cheer')}
+let mood='';function setMood(m){if(m===mood)return;mood=m;drawCat($('face'),m)}
+/* YES / NO game */
+const CFG_YN={q:'Do you love me? ❤',noReplies:[['Wait… are you sure? 🥺','cover'],['try again 🙈','sad'],["nah that's not right…",'cover'],['be serious…','smirk'],['okay last chance…','sad']],yes:"I knew you'd say yes 💗"};
+let noCount=0;
+drawCat($('cat0'),'cheer');$('ynQ').textContent=CFG_YN.q;
+$('no').onclick=()=>{
+  const r=CFG_YN.noReplies[Math.min(noCount,CFG_YN.noReplies.length-1)];noCount++;
+  $('ynQ').textContent=r[0];drawCat($('cat0'),r[1]);
+  const y=$('yes'),n=$('no'),k=1+noCount*.45;
+  y.style.transform=`scale(${k})`;y.style.margin=`0 ${noCount*14}px`;
+  n.style.transform=`scale(${Math.max(.45,1-noCount*.12)}) translate(${(Math.random()*80-40)}px,${(Math.random()*40-10)}px)`;
+  if(noCount>=CFG_YN.noReplies.length+1)n.style.visibility='hidden';
+};
+$('yes').onclick=()=>{drawCat($('cat0'),'love');$('ynQ').textContent=CFG_YN.yes;$('ynrow').style.visibility='hidden';burst(36);setTimeout(()=>go('s1'),1700)};
 
 /* meter */
 let done=false;
@@ -256,9 +296,11 @@ function update(){const v=+meter.value;meter.style.setProperty('--p',v+'%');
  if(v<100&&done){done=false;$('open').hidden=true;$('hint').hidden=false}}
 meter.addEventListener('input',update);
 
-/* gifts */
-const giftSVG=`<svg viewBox="0 0 120 130"><rect x="14" y="52" width="92" height="70" rx="6" fill="#9fd4f2" stroke="#6b1030" stroke-width="3"/><rect x="52" y="52" width="16" height="70" fill="#ffb3c6" stroke="#6b1030" stroke-width="3"/><rect x="8" y="36" width="104" height="22" rx="6" fill="#b5e0f7" stroke="#6b1030" stroke-width="3"/><rect x="52" y="36" width="16" height="22" fill="#ffb3c6" stroke="#6b1030" stroke-width="3"/><path d="M60 36C36 4 14 22 40 36zM60 36c24-32 46-14 20 0z" fill="#ffc1d1" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/></svg>`;
-for(let i=0;i<3;i++){const d=document.createElement('div');d.className='gift';d.innerHTML=giftSVG;d.onclick=()=>{burst(18);go('s3');startBouquet()};$('gifts').appendChild(d)}
+/* gifts hub */
+const giftSVG=`<svg viewBox="0 0 120 130"><rect x="14" y="52" width="92" height="70" rx="8" fill="#ffc1d1" stroke="#c9486b" stroke-width="3"/><rect x="52" y="52" width="16" height="70" fill="#ff8fab" stroke="#c9486b" stroke-width="3"/><rect x="8" y="36" width="104" height="22" rx="8" fill="#ffd6e0" stroke="#c9486b" stroke-width="3"/><rect x="52" y="36" width="16" height="22" fill="#ff8fab" stroke="#c9486b" stroke-width="3"/><path d="M60 36C36 4 14 22 40 36zM60 36c24-32 46-14 20 0z" fill="#ffb3c6" stroke="#c9486b" stroke-width="3" stroke-linejoin="round"/><path d="M60 108c-12-9-9-17-2-17 3 0 2 3 2 3s-1-3 2-3c7 0 10 8-2 17z" fill="#e8456f"/></svg>`;
+const giftDefs=[['Our memories','s3',()=>startBouquet()],['Photobooth','s6',()=>{}],['Love letter','s5',()=>{}]];
+giftDefs.forEach(([label,target,fn],i)=>{const d=document.createElement('div');d.className='gift';d.innerHTML=giftSVG+`<small>GIFT ${i+1} · ${label}</small>`;
+ d.onclick=()=>{d.classList.add('opened');burst(18);go(target);fn()};$('gifts').appendChild(d)});
 $('passTitle').textContent=CONFIG.passTitle;$('passSub').textContent=CONFIG.passSub;
 $('question').textContent=CONFIG.question;document.title=CONFIG.question;
 
@@ -289,7 +331,7 @@ document.querySelector('[data-go="s4"]').addEventListener('click',()=>{if(CONFIG
 $('letterTitle').textContent=CONFIG.letterTitle;$('letterText').textContent=CONFIG.letter;$('sig').textContent=CONFIG.signature;
 
 $('open').onclick=()=>{go('s2');burst(30)};
-$('again').onclick=()=>{audio.pause();meter.value=0;done=false;$('open').hidden=true;$('hint').hidden=false;update();go('s1')};
+$('again').onclick=()=>{audio.pause();meter.value=0;done=false;$('open').hidden=true;$('hint').hidden=false;update();noCount=0;$('yes').style.cssText='';$('no').style.cssText='';$('ynrow').style.visibility='';$('ynQ').textContent=CFG_YN.q;drawCat($('cat0'),'cheer');document.querySelectorAll('.gift').forEach(g=>g.classList.remove('opened'));go('s0')};
 /* photobooth */
 let stream=null;
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('cam').srcObject=null}
