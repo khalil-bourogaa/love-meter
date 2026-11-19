@@ -100,6 +100,29 @@ a.cta{text-decoration:none;display:inline-block}
 #vinyl.spin{animation:spin 3s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #s7 .player{position:static;transform:none;margin:14px auto 0;width:min(340px,92vw)}
+
+/* ---- polish ---- */
+#reaction{margin-top:16px}
+.hint{margin-top:10px}
+#pct{transition:transform .15s}
+button.cta,a.cta,.ynrow button,.gift{-webkit-tap-highlight-color:transparent}
+button.cta:active,a.cta:active,.ynrow button:active{transform:scale(.96)}
+button.cta:focus-visible,button.next:focus-visible,.ynrow button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.viewfinder{background:linear-gradient(160deg,#ffc2d1,#ff8fab)}
+.viewfinder::before{content:'📷';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.5rem;opacity:.7;z-index:0}
+.viewfinder video{position:relative;z-index:1}
+.viewfinder .count,.viewfinder .flash{z-index:2}
+#cat5{width:130px;height:130px;margin-top:-6px}
+@media (max-width:560px){
+  .plane{display:none}
+  .bq{flex-wrap:wrap;gap:12px}
+  .bq .frame{order:-1;flex:0 0 auto;margin:0 auto;width:min(230px,62vw)}
+  .bq .col{flex:1 1 42%;gap:12px}
+  .bubble{font-size:1.05rem;padding:10px 12px}
+  .gift small{font-size:.7rem}
+  h2.title{font-size:2.2rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
 </head>
 <body>
@@ -195,14 +218,7 @@ a.cta{text-decoration:none;display:inline-block}
 <section class="screen pinkbg" id="s5">
   <h2 class="title" style="font-size:2.2rem;margin-bottom:12px" id="letterTitle">Letter From My Heart</h2>
   <div class="paper"><p id="letterText"></p><p class="sig" id="sig"></p></div>
-  <svg class="buddy" viewBox="0 0 130 120">
-    <ellipse cx="50" cy="60" rx="38" ry="34" fill="#ffb347" stroke="#6b1030" stroke-width="3"/>
-    <path d="M18 40L22 8 44 26zM82 40L78 8 56 26z" fill="#ffb347" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M30 56q6-8 12 0M58 56q6-8 12 0" stroke="#6b1030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <path d="M44 72q6 6 12 0" stroke="#6b1030" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M70 70c-18-12-12-28 2-22 10-6 24 6 18 16-4 8-14 14-20 6z" fill="#e8456f" stroke="#a3123e" stroke-width="3" transform="translate(-8 14)"/>
-    <ellipse cx="34" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/><ellipse cx="68" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/>
-  </svg>
+  <svg id="cat5" class="cat" viewBox="-10 0 170 150" aria-hidden="true"></svg>
   <div class="brow"><button class="cta" data-go="s2">Back to gifts 🎁</button><button class="cta" id="again">Play again 💞</button></div>
 </section>
 
@@ -293,7 +309,7 @@ let mood='';function setMood(m){if(m===mood)return;mood=m;drawCat($('face'),m)}
 /* YES / NO game */
 const CFG_YN={q:'Do you love me? ❤',noReplies:[['Wait… are you sure? 🥺','cover'],['try again 🙈','sad'],["nah that's not right…",'cover'],['be serious…','smirk'],['okay last chance…','sad']],yes:"I knew you'd say yes 💗"};
 let noCount=0;
-drawCat($('cat0'),'cheer');$('ynQ').textContent=CFG_YN.q;
+drawCat($('cat0'),'cheer');drawCat($('cat5'),'love');$('ynQ').textContent=CFG_YN.q;
 $('no').onclick=()=>{
   const r=CFG_YN.noReplies[Math.min(noCount,CFG_YN.noReplies.length-1)];noCount++;
   $('ynQ').textContent=r[0];drawCat($('cat0'),r[1]);
@@ -302,7 +318,7 @@ $('no').onclick=()=>{
   n.style.transform=`scale(${Math.max(.45,1-noCount*.12)}) translate(${(Math.random()*80-40)}px,${(Math.random()*40-10)}px)`;
   if(noCount>=CFG_YN.noReplies.length+1)n.style.visibility='hidden';
 };
-$('yes').onclick=()=>{drawCat($('cat0'),'love');$('ynQ').textContent=CFG_YN.yes;$('ynrow').style.visibility='hidden';burst(36);setTimeout(()=>go('s1'),1700)};
+$('yes').onclick=()=>{drawCat($('cat0'),'love');$('ynQ').textContent=CFG_YN.yes;$('ynrow').style.visibility='hidden';burst(28);setTimeout(()=>go('s1'),1700)};
 
 /* meter */
 let done=false;
@@ -311,7 +327,7 @@ function update(){const v=+meter.value;meter.style.setProperty('--p',v+'%');
  const rx=CONFIG.reactions.find(r=>v<=r.upTo)||CONFIG.reactions.at(-1);
  setMood(rx.mood);$('reaction').textContent=rx.text;
  $('pct').textContent=v>=100?'1000%':v+'%';
- if(v>=100&&!done){done=true;burst(30);$('open').hidden=false;$('hint').hidden=true}
+ if(v>=100&&!done){done=true;burst(22);$('open').hidden=false;$('hint').hidden=true}
  if(v<100&&done){done=false;$('open').hidden=true;$('hint').hidden=false}}
 meter.addEventListener('input',update);
 
@@ -350,7 +366,7 @@ document.querySelector('#s4 .next').addEventListener('click',()=>{});
 /* letter */
 $('letterTitle').textContent=CONFIG.letterTitle;$('letterText').textContent=CONFIG.letter;$('sig').textContent=CONFIG.signature;
 
-$('open').onclick=()=>{go('s2');burst(30)};
+$('open').onclick=()=>{go('s2');burst(22)};
 $('again').onclick=()=>{audio.pause();meter.value=0;done=false;$('open').hidden=true;$('hint').hidden=false;update();noCount=0;$('yes').style.cssText='';$('no').style.cssText='';$('ynrow').style.visibility='';$('ynQ').textContent=CFG_YN.q;drawCat($('cat0'),'cheer');document.querySelectorAll('.gift').forEach(g=>g.classList.remove('opened'));go('s0')};
 /* photobooth */
 let stream=null;
