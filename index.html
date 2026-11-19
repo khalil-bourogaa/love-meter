@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How much do you love me?</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@600;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--rose:#e8456f;--deep:#a3123e;--ink:#6b1030;--pink:#ffd9e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:#fff3f6;overflow-x:hidden}
+.screen{min-height:100vh;min-height:100dvh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;text-align:center;position:relative}
+.screen.active{display:flex;animation:fade .7s ease}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.pinkbg{background:radial-gradient(circle at 25% 20%,#fff2f5,transparent 55%),radial-gradient(circle at 80% 80%,#ffc6d4,transparent 55%),#ffdbe5}
+h1{font-size:clamp(1.2rem,4.5vw,1.8rem);font-weight:800;color:var(--deep);margin:8px 0 2px}
+h2.title{font-size:clamp(2rem,8vw,3rem);font-weight:800;color:var(--rose);font-family:'Dancing Script',cursive}
+.sub{opacity:.75;margin-top:6px}
+#pct{font-size:2rem;font-weight:800;color:var(--rose);min-height:2.6rem}
+#reaction{min-height:2.4rem;font-weight:700;font-size:1.05rem}
+#face{width:140px;height:140px}
+#face.wiggle{animation:wig .5s ease infinite}
+@keyframes wig{50%{transform:rotate(5deg)}0%,100%{transform:rotate(-5deg)}}
+.gauge{width:min(400px,88vw)}.gauge svg{width:100%;display:block}
+#needle{transform-origin:200px 190px;transition:transform .15s ease-out}
+input[type=range]{-webkit-appearance:none;appearance:none;width:min(400px,86vw);height:8px;border-radius:99px;background:linear-gradient(90deg,var(--rose) var(--p,0%),#f4c3d0 var(--p,0%));margin-top:10px;touch-action:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:4px solid var(--rose);box-shadow:0 3px 10px #e8456f55}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--rose)}
+button.cta,button.next{border:0;border-radius:99px;font:800 1rem 'Nunito',sans-serif;color:#fff;background:linear-gradient(135deg,#f06b8f,var(--deep));cursor:pointer;box-shadow:0 8px 20px #a3123e44}
+button.cta{padding:14px 28px;margin-top:18px}
+button.next{position:absolute;top:14px;right:14px;padding:9px 18px;font-size:.9rem;z-index:5}
+[hidden]{display:none!important}
+.deco{position:absolute;opacity:.55;animation:bob 4s ease-in-out infinite;pointer-events:none}
+@keyframes bob{50%{transform:translateY(-10px) rotate(6deg)}}
+.plane{position:absolute;left:3%;bottom:18%;width:90px}
+
+/* gift */
+.gifts{display:flex;gap:14px;margin-top:26px;justify-content:center;flex-wrap:wrap}
+.gift{width:min(150px,28vw);cursor:pointer;animation:hop 1.6s ease-in-out infinite}
+.gift:nth-child(2){animation-delay:.25s}.gift:nth-child(3){animation-delay:.5s}
+@keyframes hop{50%{transform:translateY(-12px)}}
+.gift:hover{filter:brightness(1.06)}
+
+/* bouquet */
+.bq{position:relative;width:min(900px,100%);display:flex;align-items:center;justify-content:center;gap:2%;margin-top:6px}
+.bq .col{flex:1;display:flex;flex-direction:column;gap:22px}
+.bubble{background:#fff;border:2px solid #f2a0b6;border-radius:18px;padding:12px 14px;font-family:'Dancing Script',cursive;font-size:clamp(1rem,3.4vw,1.35rem);font-weight:600;color:var(--deep);box-shadow:0 6px 14px #a3123e22;opacity:0;animation:pop .6s ease forwards}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.frame{width:min(260px,44vw);background:#fff9fa;padding:14px;border:3px solid #ef8aa5;border-radius:30px;box-shadow:0 10px 24px #a3123e33}
+.frame svg{width:100%;display:block}
+
+/* memories */
+.scrap{position:relative;width:min(560px,94vw);padding:26px 14px 70px;margin:auto}
+.polaroid{position:relative;background:#fff;padding:12px 12px 40px;box-shadow:0 14px 30px #a3123e33;transform:rotate(-2deg);max-width:340px;margin:0 auto}
+.polaroid .img{aspect-ratio:1;background:linear-gradient(160deg,#cfe8ff 0 45%,#a8c97a 45% 100%);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+.polaroid img{width:100%;height:100%;object-fit:cover}
+.polaroid .cap{position:absolute;bottom:8px;left:0;right:0;font-family:'Caveat',cursive;font-size:1.4rem;color:var(--deep)}
+.tape{position:absolute;width:90px;height:26px;background:#ffd6e0cc;top:-10px;left:50%;margin-left:-45px;transform:rotate(3deg)}
+.ticket{position:absolute;left:-2%;top:6%;width:120px;background:#f5dcc7;border:2px dashed #c79a7d;padding:8px;font-size:.62rem;font-weight:800;transform:rotate(-8deg);color:#8a5a44;text-align:center;z-index:2}
+.pnav{display:flex;gap:10px;justify-content:center;margin-top:12px}
+.pnav button{border:0;background:#fff;border-radius:50%;width:38px;height:38px;color:var(--rose);font-size:1.1rem;cursor:pointer;box-shadow:0 3px 8px #a3123e22}
+.player{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(330px,92%);background:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 20px #a3123e33;text-align:left}
+.player .art{width:42px;height:42px;border-radius:8px;background:linear-gradient(135deg,#f06b8f,#a3123e);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.player .t{flex:1;font-size:.8rem;font-weight:800}.player small{display:block;opacity:.6;font-weight:600}
+.player .bar{height:4px;background:#f4c3d0;border-radius:9px;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--rose)}
+.player button{border:0;background:var(--rose);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none}
+
+/* letter */
+.paper{position:relative;width:min(620px,94vw);background:#fff9d9;border-radius:14px;padding:34px 24px 34px 40px;box-shadow:0 14px 30px #a3123e33;text-align:left;
+ background-image:repeating-linear-gradient(transparent,transparent 33px,#e9d9a3 34px);line-height:34px;border-left:5px double #f2a0b6;margin-bottom:20px}
+.paper p{white-space:pre-line;font-weight:700;font-size:1rem}
+.paper .sig{text-align:right;color:var(--rose);font-family:'Dancing Script',cursive;font-size:1.6rem}
+.buddy{width:130px;align-self:flex-start;margin-left:max(0px,calc(50% - 310px))}
+.float{position:fixed;pointer-events:none;animation:up linear forwards;z-index:60}
+@keyframes up{from{transform:translateY(0) scale(.6);opacity:1}to{transform:translateY(-110vh) scale(1.3);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- 1: LOVE METER -->
+<section class="screen active" id="s1">
+  <svg class="plane" viewBox="0 0 90 60"><path d="M4 30L84 4 62 56 44 38z" fill="#ffc1d1" stroke="#e8456f" stroke-width="2.5" stroke-linejoin="round"/><path d="M44 38l40-34" stroke="#e8456f" stroke-width="2.5"/><circle cx="52" cy="26" r="2" fill="#6b1030"/><circle cx="62" cy="23" r="2" fill="#6b1030"/></svg>
+  <svg class="deco" style="top:10px;right:10px;width:60px" viewBox="0 0 60 60" fill="none" stroke="#e8456f" stroke-width="2.5" stroke-dasharray="5 4"><path d="M30 50C6 32 12 12 30 24 48 12 54 32 30 50z"/></svg>
+
+  <svg id="face" viewBox="0 0 150 150" aria-hidden="true">
+    <ellipse cx="75" cy="84" rx="52" ry="46" fill="#fff" stroke="#6b1030" stroke-width="3"/>
+    <path d="M30 56L36 18 66 40zM120 56L114 18 84 40z" fill="#fff" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M38 44l2-12 12 8zM112 44l-2-12-12 8z" fill="#ffc2d1"/>
+    <ellipse cx="44" cy="94" rx="9" ry="5" fill="#ff9bb5" opacity=".7"/><ellipse cx="106" cy="94" rx="9" ry="5" fill="#ff9bb5" opacity=".7"/>
+    <g id="eyes"></g><g id="mouth"></g>
+  </svg>
+  <h1 id="question">How much do you love me?</h1>
+  <div id="pct">0%</div>
+  <div class="gauge"><svg viewBox="0 0 400 210">
+    <g id="segments" transform="translate(200 190)"></g>
+    <text x="200" y="168" text-anchor="middle" font-family="Dancing Script" font-size="34" font-weight="700" fill="#a3123e">love</text>
+    <g id="needle"><line x1="200" y1="190" x2="200" y2="72" stroke="#6b1030" stroke-width="5" stroke-linecap="round"/><circle cx="200" cy="190" r="10" fill="#6b1030"/></g>
+  </svg></div>
+  <input type="range" id="meter" min="0" max="100" value="0" aria-label="Love meter">
+  <p id="reaction"></p>
+  <p class="sub" id="hint">Drag the slider 👆</p>
+  <button class="cta" id="open" hidden>Open your surprise 💌</button>
+</section>
+
+<!-- 2: PASSED -->
+<section class="screen pinkbg" id="s2">
+  <h2 class="title" id="passTitle">You passed the love test</h2>
+  <p class="sub" id="passSub">Your surprises are waiting for you</p>
+  <div class="gifts" id="gifts"></div>
+  <p class="sub" style="margin-top:20px">Tap a gift 🎁</p>
+</section>
+
+<!-- 3: BOUQUET -->
+<section class="screen pinkbg" id="s3">
+  <button class="next" data-go="s4">Next →</button>
+  <h2 class="title" style="font-size:2rem">Your Bouquet</h2>
+  <div class="bq">
+    <div class="col" id="bubL"></div>
+    <div class="frame"><svg viewBox="0 0 200 280" id="bouquet"></svg></div>
+    <div class="col" id="bubR"></div>
+  </div>
+</section>
+
+<!-- 4: MEMORIES -->
+<section class="screen pinkbg" id="s4">
+  <button class="next" data-go="s5">Next →</button>
+  <div class="scrap">
+    <div class="ticket">LOVE PASS<br>ADMIT ONE · FOREVER<br>♥ SPECIAL DAY ♥</div>
+    <div class="polaroid"><div class="tape"></div><div class="img" id="photoBox">📸</div><div class="cap" id="caption"></div></div>
+    <div class="pnav" id="pnav"><button id="prev">‹</button><button id="nextp">›</button></div>
+    <div class="player" id="player">
+      <div class="art">♪</div>
+      <div class="t"><span id="songTitle"></span><small id="songArtist"></small><div class="bar"><i id="prog"></i></div></div>
+      <button id="play">▶</button>
+    </div>
+    <audio id="audio" preload="none"></audio>
+  </div>
+</section>
+
+<!-- 5: LETTER -->
+<section class="screen pinkbg" id="s5">
+  <h2 class="title" style="font-size:2.2rem;margin-bottom:12px" id="letterTitle">Letter From My Heart</h2>
+  <div class="paper"><p id="letterText"></p><p class="sig" id="sig"></p></div>
+  <svg class="buddy" viewBox="0 0 130 120">
+    <ellipse cx="50" cy="60" rx="38" ry="34" fill="#ffb347" stroke="#6b1030" stroke-width="3"/>
+    <path d="M18 40L22 8 44 26zM82 40L78 8 56 26z" fill="#ffb347" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M30 56q6-8 12 0M58 56q6-8 12 0" stroke="#6b1030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M44 72q6 6 12 0" stroke="#6b1030" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M70 70c-18-12-12-28 2-22 10-6 24 6 18 16-4 8-14 14-20 6z" fill="#e8456f" stroke="#a3123e" stroke-width="3" transform="translate(-8 14)"/>
+    <ellipse cx="34" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/><ellipse cx="68" cy="98" rx="14" ry="10" fill="#fff" stroke="#6b1030" stroke-width="3"/>
+  </svg>
+  <button class="cta" id="again">Play again 💞</button>
+</section>
+
+<script>
+/* ============ ✏️ CUSTOMIZE HERE ============ */
+const CONFIG = {
+  question: "How much do you love me?",
+  passTitle: "You passed the love test",
+  passSub: "Your surprises are waiting for you",
+
+  // Reactions as the meter moves (upTo = max % covered)
+  reactions: [
+    { upTo: 5,   mood: "shy",    text: "Hmm… are you even trying? 🥺" },
+    { upTo: 30,  mood: "sad",    text: "Only that much? 😭" },
+    { upTo: 60,  mood: "smirk",  text: "Half? Seriously? 😏" },
+    { upTo: 99,  mood: "smile",  text: "Aww, that's more like it! 😊" },
+    { upTo: 100, mood: "love",   text: "Correct answer! 💖" }
+  ],
+
+  // Speech bubbles around the bouquet (left and right)
+  bubblesLeft:  ["You make my heart bloom", "Life feels sweeter with you", "You make every moment sweeter"],
+  bubblesRight: ["I choose you every day", "You are the gift I cherish", "My heart will always choose you"],
+
+  // Photos: put files in a photos/ folder, e.g. { src: "photos/us1.jpg", caption: "Our first trip" }
+  photos: [
+    { src: "", caption: "Add your first photo" },
+    { src: "", caption: "Add your second photo" },
+    { src: "", caption: "Our favorite memory" }
+  ],
+  // Song: put an mp3 next to index.html, e.g. "song.mp3". Leave "" to hide the player.
+  songFile: "", songTitle: "Our Song", songArtist: "Play me",
+
+  letterTitle: "Letter From My Heart",
+  letter:
+`You make my life feel more beautiful and meaningful, and I feel so lucky to have you. I love you wholeheartedly, and I can't wait to continue loving you for the rest of my life.
+
+You make me smile, you make me feel safe, and you bring so much happiness into my world.
+
+Thank you for being you and for filling my heart with so much love. No matter what happens, I will always choose you.`,
+  signature: "Always, forever ♥"
+};
+/* ========================================== */
+
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
+const meter=$('meter');
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+/* hearts burst */
+function burst(n=24){const e=['💗','💖','💕','💘','✨'];for(let i=0;i<n;i++){const s=document.createElement('span');s.className='float';s.textContent=e[i%e.length];s.style.left=Math.random()*100+'vw';s.style.bottom='-30px';s.style.fontSize=(18+Math.random()*24)+'px';s.style.animationDuration=(3+Math.random()*3)+'s';s.style.animationDelay=Math.random()*.8+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),7500)}}
+
+/* gauge */
+(function(){const g=$('segments'),cols=['#ffd6e0','#ffb3c6','#ff8fab','#e8456f','#a3123e'],R=150,r=82;
+cols.forEach((c,i)=>{const a0=Math.PI+i*Math.PI/5,a1=Math.PI+(i+1)*Math.PI/5,p=(q,a)=>[Math.cos(a)*q,Math.sin(a)*q];
+const [x0,y0]=p(R,a0),[x1,y1]=p(R,a1),[x2,y2]=p(r,a1),[x3,y3]=p(r,a0);
+const el=document.createElementNS(NS,'path');el.setAttribute('d',`M${x0} ${y0}A${R} ${R} 0 0 1 ${x1} ${y1}L${x2} ${y2}A${r} ${r} 0 0 0 ${x3} ${y3}Z`);el.setAttribute('fill',c);el.setAttribute('stroke','#fff3f6');el.setAttribute('stroke-width','3');g.appendChild(el)})})();
+
+/* faces */
+const L='stroke="#6b1030" stroke-width="4" fill="none" stroke-linecap="round"';
+const faces={
+ shy:{e:`<circle cx="58" cy="82" r="5" fill="#6b1030"/><circle cx="92" cy="82" r="5" fill="#6b1030"/>`,m:`<path d="M66 106h18" ${L}/>`},
+ sad:{e:`<path d="M50 84q8-8 16 0M84 84q8-8 16 0" ${L}/><path d="M52 90v26M98 90v26" stroke="#5aa9e6" stroke-width="9" stroke-linecap="round"/>`,m:`<path d="M64 112q11-12 22 0" ${L}/>`},
+ smirk:{e:`<circle cx="58" cy="82" r="5" fill="#6b1030"/><circle cx="92" cy="82" r="5" fill="#6b1030"/><path d="M50 72l16 4M100 72l-16 4" ${L}/>`,m:`<path d="M62 106q16 8 26-4" ${L}/>`},
+ smile:{e:`<path d="M50 84q8-10 16 0M84 84q8-10 16 0" ${L}/>`,m:`<path d="M60 100q15 18 30 0z" fill="#ff9bb5" ${L.replace('fill="none"','')}/>`},
+ love:{e:`<path d="M58 90c-14-9-10-20-2-20 3 0 2 3 2 3s-1-3 2-3c8 0 12 11-2 20zM92 90c-14-9-10-20-2-20 3 0 2 3 2 3s-1-3 2-3c8 0 12 11-2 20z" fill="#e8456f"/>`,m:`<path d="M58 100q17 24 34 0z" fill="#a3123e" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/>`}};
+let mood='';function setMood(m){if(m===mood)return;mood=m;$('eyes').innerHTML=faces[m].e;$('mouth').innerHTML=faces[m].m;$('face').classList.toggle('wiggle',m==='love')}
+
+/* meter */
+let done=false;
+function update(){const v=+meter.value;meter.style.setProperty('--p',v+'%');
+ $('needle').style.transform=`rotate(${-90+v*1.8}deg)`;
+ const rx=CONFIG.reactions.find(r=>v<=r.upTo)||CONFIG.reactions.at(-1);
+ setMood(rx.mood);$('reaction').textContent=rx.text;
+ $('pct').textContent=v>=100?'1000%':v+'%';
+ if(v>=100&&!done){done=true;burst(30);$('open').hidden=false;$('hint').hidden=true}
+ if(v<100&&done){done=false;$('open').hidden=true;$('hint').hidden=false}}
+meter.addEventListener('input',update);
+
+/* gifts */
+const giftSVG=`<svg viewBox="0 0 120 130"><rect x="14" y="52" width="92" height="70" rx="6" fill="#9fd4f2" stroke="#6b1030" stroke-width="3"/><rect x="52" y="52" width="16" height="70" fill="#ffb3c6" stroke="#6b1030" stroke-width="3"/><rect x="8" y="36" width="104" height="22" rx="6" fill="#b5e0f7" stroke="#6b1030" stroke-width="3"/><rect x="52" y="36" width="16" height="22" fill="#ffb3c6" stroke="#6b1030" stroke-width="3"/><path d="M60 36C36 4 14 22 40 36zM60 36c24-32 46-14 20 0z" fill="#ffc1d1" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/></svg>`;
+for(let i=0;i<3;i++){const d=document.createElement('div');d.className='gift';d.innerHTML=giftSVG;d.onclick=()=>{burst(18);go('s3');startBouquet()};$('gifts').appendChild(d)}
+$('passTitle').textContent=CONFIG.passTitle;$('passSub').textContent=CONFIG.passSub;
+$('question').textContent=CONFIG.question;document.title=CONFIG.question;
+
+/* bouquet art (original) */
+(function(){const s=$('bouquet');let h='';
+ h+=`<path d="M100 140L40 270h120z" fill="#fff" stroke="#6b1030" stroke-width="3" stroke-linejoin="round"/><path d="M100 140L60 270M100 140l40 130" stroke="#f2a0b6" stroke-width="2" fill="none"/>`;
+ [[100,70,38],[62,92,30],[138,92,30],[78,128,28],[122,128,28],[100,108,30]].forEach(([x,y,r])=>{
+  h+=`<g><circle cx="${x}" cy="${y}" r="${r}" fill="#c0203c" stroke="#7a0f26" stroke-width="3"/><path d="M${x-r*.6} ${y}a${r*.6} ${r*.6} 0 0 1 ${r*1.2} 0M${x-r*.35} ${y+4}a${r*.35} ${r*.35} 0 0 1 ${r*.7} 0M${x-r*.7} ${y-r*.35}q${r*.7} ${-r*.5} ${r*1.4} 0" stroke="#7a0f26" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`});
+ h+=`<path d="M70 182l60 0-10 18H80z" fill="#e8456f" stroke="#a3123e" stroke-width="3" stroke-linejoin="round"/><path d="M100 188c-26-24-46-10-30 6zM100 188c26-24 46-10 30 6z" fill="#ff8fab" stroke="#a3123e" stroke-width="3"/><path d="M96 196c-6 30-18 40-30 52M104 196c6 30 18 40 30 52" stroke="#e8456f" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+ s.innerHTML=h})();
+function startBouquet(){[['bubL',CONFIG.bubblesLeft],['bubR',CONFIG.bubblesRight]].forEach(([id,arr],c)=>{const el=$(id);el.innerHTML='';arr.forEach((t,i)=>{const b=document.createElement('div');b.className='bubble';b.textContent=t;b.style.animationDelay=(.5+i*.5+c*.25)+'s';el.appendChild(b)})})}
+
+/* photos + song */
+let pi=0;function showPhoto(){const p=CONFIG.photos[pi];if(!p)return;$('photoBox').innerHTML=p.src?`<img src="${p.src}" alt="">`:'📸';$('caption').textContent=p.caption||''}
+$('prev').onclick=()=>{pi=(pi-1+CONFIG.photos.length)%CONFIG.photos.length;showPhoto()};
+$('nextp').onclick=()=>{pi=(pi+1)%CONFIG.photos.length;showPhoto()};
+if(CONFIG.photos.length<2)$('pnav').hidden=true;
+const audio=$('audio');$('songTitle').textContent=CONFIG.songTitle;$('songArtist').textContent=CONFIG.songArtist;
+if(!CONFIG.songFile)$('player').hidden=true;else{audio.src=CONFIG.songFile;
+ $('play').onclick=()=>audio.paused?audio.play():audio.pause();
+ audio.onplay=()=>$('play').textContent='❚❚';audio.onpause=()=>$('play').textContent='▶';
+ audio.ontimeupdate=()=>$('prog').style.width=(audio.currentTime/(audio.duration||1)*100)+'%'}
+document.querySelector('[data-go="s4"]').addEventListener('click',showPhoto);
+document.querySelector('#s4 .next').addEventListener('click',()=>{});
+document.querySelector('[data-go="s4"]').addEventListener('click',()=>{if(CONFIG.songFile)audio.play().catch(()=>{})});
+
+/* letter */
+$('letterTitle').textContent=CONFIG.letterTitle;$('letterText').textContent=CONFIG.letter;$('sig').textContent=CONFIG.signature;
+
+$('open').onclick=()=>{go('s2');burst(30)};
+$('again').onclick=()=>{audio.pause();meter.value=0;done=false;$('open').hidden=true;$('hint').hidden=false;update();go('s1')};
+setMood('shy');update();
+</script>
+</body>
+</html>
